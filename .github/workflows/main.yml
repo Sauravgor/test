@@ -1,9 +1,9 @@
-name: Run Python Script Daily with Logs
+name: Run Python Script Hourly with Logs
 
 on:
   workflow_dispatch:  # Manual trigger
-  schedule:           # Scheduled trigger (every day at midnight UTC)
-    - cron: "0 0 * * *"
+  schedule:           # Scheduled trigger (every hour)
+    - cron: "0 * * * *"  # This runs at the start of every hour
 
 permissions:
   contents: write  # Allow write access to repository contents
