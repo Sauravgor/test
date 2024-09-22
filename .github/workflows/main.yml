@@ -32,7 +32,7 @@ jobs:
       - name: Run the Python script and save logs
         run: |
           echo "Log entry for $(date +"%Y-%m-%d %H:%M:%S")" >> log.txt  # Add a timestamp entry
-          python your_script.py >> log.txt 2>&1  # Append output to log.txt
+          python test.py >> log.txt 2>&1  # Append output to log.txt
 
       # Step 5: Commit and push log file back to the repository
       - name: Commit and push log file
