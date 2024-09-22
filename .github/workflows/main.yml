@@ -1,12 +1,8 @@
-name: Run Python Script Daily
+name: Run Python Script Daily with Logs
 
-# Triggers the workflow manually and daily at midnight (00:00 UTC)
 on:
-  # Manual trigger
-  workflow_dispatch:
-
-  # Scheduled trigger (every day at midnight UTC)
-  schedule:
+  workflow_dispatch:  # Manual trigger
+  schedule:           # Scheduled trigger (every day at midnight UTC)
     - cron: "0 0 * * *"
 
 jobs:
@@ -24,11 +20,24 @@ jobs:
         with:
           python-version: '3.x'  # Replace '3.x' with the version of Python you need
 
-      # Step 3: Install dependencies (optional, if you have a requirements.txt file)
+      # Step 3: Install dependencies (optional)
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Step 4: Run the Python script
-      - name: Run the Python script
-        run: python test.py  # Replace 'your_script.py' with the name of your script
+      # Step 4: Run the Python script and save output to a log file with timestamp
+      - name: Run the Python script and save logs
+        run: |
+          timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+          python test.py > "log_$timestamp.txt" 2>&1  # Replace 'your_script.py' with your script name
+
+      # Step 5: Commit and push the log file back to the repository
+      - name: Commit and push log file
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add log_*.txt
+          git commit -m "Add log file for ${{ github.run_id }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's automatic token
