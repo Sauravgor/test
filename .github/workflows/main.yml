@@ -5,6 +5,9 @@ on:
   schedule:           # Scheduled trigger (every day at midnight UTC)
     - cron: "0 0 * * *"
 
+permissions:
+  contents: write  # Allow write access to repository contents
+
 jobs:
   run-python:
     runs-on: ubuntu-latest
@@ -25,19 +28,19 @@ jobs:
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Step 4: Run the Python script and save output to a log file with timestamp
+      # Step 4: Run the Python script and append output to log.txt
       - name: Run the Python script and save logs
         run: |
-          timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
-          python test.py > "log_$timestamp.txt" 2>&1  # Replace 'your_script.py' with your script name
+          echo "Log entry for $(date +"%Y-%m-%d %H:%M:%S")" >> log.txt  # Add a timestamp entry
+          python your_script.py >> log.txt 2>&1  # Append output to log.txt
 
-      # Step 5: Commit and push the log file back to the repository
+      # Step 5: Commit and push log file back to the repository
       - name: Commit and push log file
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add log_*.txt
-          git commit -m "Add log file for ${{ github.run_id }}"
+          git add log.txt
+          git commit -m "Update log.txt for ${{ github.run_id }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's automatic token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
