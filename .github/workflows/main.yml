@@ -3,7 +3,7 @@ name: Run Python Script Daily at 10 AM IST with Logs
 on:
   workflow_dispatch:  # Manual trigger
   schedule:           # Scheduled trigger (every day at 10 AM IST)
-    - cron: "30 4 * * *"  # This runs at 4:30 AM UTC (10 AM IST)
+# This runs at 4:30 AM UTC (10 AM IST)
 
 permissions:
   contents: write  # Allow write access to repository contents
